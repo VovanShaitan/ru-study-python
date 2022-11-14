@@ -1,4 +1,3 @@
-from csv import DictReader
 from typing import Union
 
 
@@ -14,14 +13,12 @@ class MapExercise:
         Ключи словаря: name, rating_kinopoisk, rating_imdb, genres, year, access_level, country
         :return: Средний рейтинг фильмов у которых две или больше стран
         """
-        def created_by_multicountries(film_country):
-            return True if ',' in film_country else False
+        movies_multicountries = filter(lambda x: ',' in x['country'], list_of_movies)
 
-        def has_rating(film_rating_kinopoisk):
-            return True if film_rating_kinopoisk not in ['', '0'] else False
+        movies_multicountries_with_rating = filter(
+            lambda x: x['rating_kinopoisk'] not in ['', '0'], movies_multicountries)
 
-        result_list = [film['rating_kinopoisk'] for film in list_of_movies if
-                       has_rating(film['rating_kinopoisk']) and created_by_multicountries(film['country'])]
+        result_list = [movie['rating_kinopoisk'] for movie in movies_multicountries_with_rating]
 
         return sum(list(map(float, result_list))) / len(result_list)
 
@@ -39,17 +36,9 @@ class MapExercise:
         """
         counted_letter = 'и'
 
-        filtered_films = [film['rating_kinopoisk'] for film in list_of_movies if (
-            film['rating_kinopoisk'] != '' and float(film['rating_kinopoisk']) >= rating)]
+        filtered_movies = [movie['name'] for movie in list_of_movies if (
+            movie['rating_kinopoisk'] != '' and float(movie['rating_kinopoisk']) >= rating)]
 
-        result = list(map(lambda x: x.count(counted_letter), filtered_films))
+        result = list(map(lambda x: x.count(counted_letter), filtered_movies))
+
         return sum(result)
-
-
-def list_of_movies(self) -> list[dict]:
-    with open("tests/fixtures/movies.csv", "r") as movies:
-        list_of_movies = list(DictReader(movies))
-    return list_of_movies
-
-
-print(MapExercise.rating(list_of_movies))
