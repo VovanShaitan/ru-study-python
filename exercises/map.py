@@ -2,6 +2,7 @@ from typing import Union
 
 
 class MapExercise:
+
     @staticmethod
     def rating(list_of_movies: list[dict]) -> float:
         """
@@ -12,7 +13,14 @@ class MapExercise:
         Ключи словаря: name, rating_kinopoisk, rating_imdb, genres, year, access_level, country
         :return: Средний рейтинг фильмов у которых две или больше стран
         """
-        pass
+        movies_multicountries = filter(lambda x: ',' in x['country'], list_of_movies)
+
+        movies_multicountries_with_rating = filter(
+            lambda x: x['rating_kinopoisk'] not in ['', '0'], movies_multicountries)
+
+        result_list = [movie['rating_kinopoisk'] for movie in movies_multicountries_with_rating]
+
+        return sum(list(map(float, result_list))) / len(result_list)
 
     @staticmethod
     def chars_count(list_of_movies: list[dict], rating: Union[float, int]) -> int:
@@ -26,4 +34,11 @@ class MapExercise:
         :return: Количество букв 'и' в названиях всех фильмов с рейтингом больше
         или равным заданному значению
         """
-        pass
+        counted_letter = 'и'
+
+        filtered_movies = [movie['name'] for movie in list_of_movies if (
+            movie['rating_kinopoisk'] != '' and float(movie['rating_kinopoisk']) >= rating)]
+
+        result = list(map(lambda x: x.count(counted_letter), filtered_movies))
+
+        return sum(result)
