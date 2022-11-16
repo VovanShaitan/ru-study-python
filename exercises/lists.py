@@ -7,7 +7,7 @@ class ListExercise:
         :param input_list: Исходный список
         :return: Список с замененными элементами
         """
-        max_elem = 0
+        max_elem = input_list[0] if len(input_list) > 0 else None
         for elem in input_list:
             if elem > max_elem:
                 max_elem = elem
